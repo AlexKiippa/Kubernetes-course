@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guestbook
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: guestbook-server
+  template:
+    metadata:
+      labels:
+        app: guestbook-server
+    spec:
+      containers:
+      - name: gbook
+        image: ghcr.io/omoroifi/kubernetes-course-guestbook:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: REDIS_HOST
+          value: redis
+        - name: REDIS_PORT
+          value: "9000"
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: password
